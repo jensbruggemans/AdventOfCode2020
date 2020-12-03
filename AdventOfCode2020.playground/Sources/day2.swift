@@ -30,6 +30,6 @@ struct PasswordEntry {
     func isValid2() -> Bool {
         let first = password.characterAt(min-1) == character
         let second = password.characterAt(max-1) == character
-        return (first || second) && (first != second)
+        return first != second
     }
 }
