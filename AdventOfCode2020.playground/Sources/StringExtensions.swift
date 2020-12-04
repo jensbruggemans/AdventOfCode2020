@@ -29,4 +29,18 @@ public extension String {
         let end = index(start, offsetBy: range.upperBound - range.lowerBound)
         return String(self[start ..< end])
     }
+    
+    func regexMatches(_ regex:String) -> [String] {
+        let regex = try! NSRegularExpression(pattern: regex)
+        var result: [String] = []
+        if let match = regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
+            for i in 0..<match.numberOfRanges {
+                let range = match.range(at: i)
+                let stringRange = Range(range, in: self)!
+                let foundString = self[stringRange]
+                result.append(String(foundString))
+            }
+        }
+        return result
+    }
 }
