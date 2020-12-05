@@ -15,13 +15,9 @@ public func day5() {
     print("Day 5 part 2 result: \(yourId)")
 }
 
-
 extension Array where Element == Character {
     func toInt(oneCharacters: Set<Character>) -> Int {
-        var sum = 0
-        for (index, char) in self.enumerated() {
-            sum += oneCharacters.contains(char) ? Int(pow(2, Double(self.count - index - 1))) : 0
-        }
-        return sum
+        return self.enumerated().reduce(0,
+            { $0 + (oneCharacters.contains($1.element) ? Int(pow(2, Double(self.count - $1.offset - 1))) : 0) })
     }
 }
