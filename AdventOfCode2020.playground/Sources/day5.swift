@@ -1,7 +1,5 @@
 import Foundation
 
-import Foundation
-
 public func day5() {
     let fileURL = Bundle.main.url(forResource: "day5", withExtension: "txt")
     let content: String = try! String(contentsOf: fileURL!, encoding: String.Encoding.utf8)
