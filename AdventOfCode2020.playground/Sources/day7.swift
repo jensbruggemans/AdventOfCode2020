@@ -27,14 +27,6 @@ public func day7() {
 }
 
 class Bag: Hashable {
-    static func == (lhs: Bag, rhs: Bag) -> Bool {
-        return lhs.name == rhs.name
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-    }
-    
     let name: String
     var containedBags: [Bag: Int] = [:]
     init(name: String) {
@@ -42,11 +34,8 @@ class Bag: Hashable {
     }
     
     func contains(bag: Bag) -> Bool {
-        if containedBags.keys.contains(bag) {
-            return true
-        }
         for containedBag in containedBags.keys {
-            if containedBag.contains(bag: bag) {
+            if containedBag == bag || containedBag.contains(bag: bag) {
                 return true
             }
         }
@@ -59,5 +48,13 @@ class Bag: Hashable {
             total += amount * (1 + bag.amountContained())
         }
         return total
+    }
+    
+    static func == (lhs: Bag, rhs: Bag) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
     }
 }
