@@ -30,16 +30,34 @@ public extension String {
         return String(self[start ..< end])
     }
     
-    func regexMatches(_ regex:String) -> [String] {
+    func firstRegexMatch(_ regex:String) -> [String] {
         let regex = try! NSRegularExpression(pattern: regex)
         var result: [String] = []
         if let match = regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
             for i in 0..<match.numberOfRanges {
                 let range = match.range(at: i)
+                guard range.location != NSNotFound else { continue }
                 let stringRange = Range(range, in: self)!
                 let foundString = self[stringRange]
                 result.append(String(foundString))
             }
+        }
+        return result
+    }
+    
+    func allRegexMatches(_ regex: String) -> [[String]] {
+        let regex = try! NSRegularExpression(pattern: regex)
+        var result: [[String]] = []
+        for match in regex.matches(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
+            var partialResult = [String]()
+            for i in 0..<match.numberOfRanges {
+                let range = match.range(at: i)
+                guard range.location != NSNotFound else { continue }
+                let stringRange = Range(range, in: self)!
+                let foundString = self[stringRange]
+                partialResult.append(String(foundString))
+            }
+            result.append(partialResult)
         }
         return result
     }
