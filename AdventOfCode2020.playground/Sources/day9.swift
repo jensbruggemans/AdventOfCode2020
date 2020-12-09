@@ -23,15 +23,16 @@ extension Array where Element == Int {
     func subArrayAddingUpTo(_ sum: Int) -> [Int]? {
         var startIndex = 0
         var endIndex = 0
+        var subSum = self[startIndex]
         while startIndex < self.count && endIndex < self.count {
-            let subArray = self[startIndex..<endIndex]
-            let subSum = subArray.reduce(0, { $0 + $1 })
             if subSum > sum {
+                subSum -= self[startIndex]
                 startIndex += 1
             } else if subSum < sum {
                 endIndex += 1
+                subSum += self[endIndex]
             } else {
-                return Array(subArray)
+                return Array(self[startIndex..<endIndex])
             }
         }
         return nil
