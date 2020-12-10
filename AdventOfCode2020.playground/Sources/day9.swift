@@ -24,7 +24,7 @@ extension Array where Element == Int {
         var startIndex = 0
         var endIndex = 0
         var subSum = self[startIndex]
-        while startIndex < self.count && endIndex < self.count {
+        while startIndex <= endIndex && endIndex < self.count {
             if subSum > sum {
                 subSum -= self[startIndex]
                 startIndex += 1
