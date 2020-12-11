@@ -19,27 +19,24 @@ public func day10() {
         }
     }
     
-    print("Day 10 result 1: \(amountOf1 * amountOf3)")
+    print("Day 10 part 1 result: \(amountOf1 * amountOf3)")
     
     var dictionary: [Int: Int] = [:]
     
     func numberOfPathsTo(index: Int) -> Int {
-        if let result = dictionary[index] {
-            return result
-        }
         if index == 0 { return 1 }
-        if index < 0 { return 0 }
+        if let result = dictionary[index] { return result }
         var sum = 0
         for offset in 1...3 {
             let next = index - offset
             if next >= 0 && sortedNumbers[index] - sortedNumbers[next] <= 3 {
-                sum += numberOfPathsTo(index: index - offset)
+                sum += numberOfPathsTo(index: next)
             }
         }
         dictionary[index] = sum
         return sum
     }
     
-    print("Day 10 result 2: \(numberOfPathsTo(index: sortedNumbers.count - 1))")
+    print("Day 10 part 2 result: \(numberOfPathsTo(index: sortedNumbers.count - 1))")
 }
 
