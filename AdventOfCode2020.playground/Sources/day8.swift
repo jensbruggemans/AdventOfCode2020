@@ -26,12 +26,12 @@ public func day8() {
     print("Day 8 part 2 result: \(result2!.1)")
 }
 
-struct Instruction {
+private struct Instruction {
     let opcode: String
     let value: Int
 }
 
-func run(instructions: [Instruction]) -> (Bool, Int) {
+private func run(instructions: [Instruction]) -> (Bool, Int) {
     var instructionIndex = 0
     var pastInstructions = Set<Int>()
     var accumulator: Int = 0
