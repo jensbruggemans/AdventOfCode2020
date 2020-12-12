@@ -5,37 +5,30 @@ public func day11() {
     let content: String = try! String(contentsOf: fileURL!, encoding: String.Encoding.utf8).trimmingCharacters(in: CharacterSet.newlines)
     let characters = content.components(separatedBy: "\n").map{ Array($0) }
     
-    var seating1 = Seating(seats: characters)
+    var seating1 = characters
     while case let nextSeating = seating1.nextSeating(), nextSeating != seating1 {
         seating1 = nextSeating
     }
     print("Day 11 part 1 result: \(seating1.amountOfOccupiedSeats)")
     
-    
-    var seating2 = Seating(seats: characters)
+    var seating2 = characters
     while case let nextSeating = seating2.nextSeating2(), nextSeating != seating2 {
         seating2 = nextSeating
     }
     print("Day 11 part 2 result: \(seating2.amountOfOccupiedSeats)")
 }
 
-struct Seating: Equatable {
-    
-    let seats: [[Character]]
-    
-    static func == (lhs: Seating, rhs: Seating) -> Bool {
-        return lhs.seats == rhs.seats
-    }
+extension Array where Element == Array<Character> {
     
     var amountOfOccupiedSeats: Int {
-        return seats.reduce(0, { $0 + $1.reduce(0, { $0 + ($1 == "#" ? 1 : 0) }) })
+        return self.reduce(0, { $0 + $1.reduce(0, { $0 + ($1 == "#" ? 1 : 0) }) })
     }
     
     func characterAt(row: Int, column: Int) -> Character {
-        guard row >= 0, column >= 0, row < seats.count, column < seats[row].count else {
+        guard row >= 0, column >= 0, row < self.count, column < self[row].count else {
             return "."
         }
-        return seats[row][column]
+        return self[row][column]
     }
     
     func isOccupiedSeatAt(row: Int, column: Int) -> Bool {
@@ -45,14 +38,12 @@ struct Seating: Equatable {
     func hasOccupiedSeatInDirection(r: Int, c: Int, fromRow:Int, fromColumn: Int) -> Bool {
         var row = fromRow + r
         var column = fromColumn + c
-        while row >= 0 && column >= 0 && row < seats.count && column < seats[row].count {
-            if hasSeatAt(row: row, column: column) {
-                if isOccupiedSeatAt(row: row, column: column) {
-                    return true
-                }
-                else {
-                    return false
-                }
+        while row >= 0 && column >= 0 && row < self.count && column < self[row].count {
+            if isOccupiedSeatAt(row: row, column: column) {
+                return true
+            }
+            else if hasSeatAt(row: row, column: column) {
+                return false
             }
             row += r
             column += c
@@ -87,10 +78,10 @@ struct Seating: Equatable {
         return sum
     }
     
-    func nextSeating() -> Seating {
-        var nextSeats = seats
-        for row in 0..<nextSeats.count {
-            for column in 0..<nextSeats[row].count {
+    func nextSeating() -> [[Character]] {
+        var nextSeats = self
+        for row in 0..<self.count {
+            for column in 0..<self[row].count {
                 guard hasSeatAt(row: row, column: column) else {
                     continue
                 }
@@ -104,26 +95,26 @@ struct Seating: Equatable {
                 }
             }
         }
-        return Seating(seats: nextSeats)
+        return nextSeats
     }
     
-    func nextSeating2() -> Seating {
-        var nextSeats = seats
-        for row in 0..<nextSeats.count {
-            for column in 0..<nextSeats[row].count {
+    func nextSeating2() -> [[Character]] {
+        var nextSeats = self
+        for row in 0..<self.count {
+            for column in 0..<self[row].count {
                 guard hasSeatAt(row: row, column: column) else {
                     continue
                 }
                 let isOccupied = isOccupiedSeatAt(row: row, column: column)
-                let numberOfAdjacentSeatsOccupied = numberOfOccupiedSeatsVisibleFrom(row: row, column: column)
-                if !isOccupied && numberOfAdjacentSeatsOccupied == 0 {
+                let numberOfOccupiedSeatsVisible = numberOfOccupiedSeatsVisibleFrom(row: row, column: column)
+                if !isOccupied && numberOfOccupiedSeatsVisible == 0 {
                     nextSeats[row][column] = "#"
                 }
-                else if isOccupied && numberOfAdjacentSeatsOccupied >= 5 {
+                else if isOccupied && numberOfOccupiedSeatsVisible >= 5 {
                     nextSeats[row][column] = "L"
                 }
             }
         }
-        return Seating(seats: nextSeats)
+        return nextSeats
     }
 }
